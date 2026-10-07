@@ -1,0 +1,67 @@
+.active > .page-link,
+.page-link.active {
+    z-index: 3;
+    color: #ffffff; /* couleur du texte actif */
+    background-color: var(--primary-color); /* couleur de fond active */
+    border-color: var(--primary-color); /* couleur de la bordure */
+}
+
+#slider {
+    margin: 20px 0;
+}
+
+.price-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #333;
+}
+
+.noUi-connect {
+    background-color: #88888898;
+}
+
+.noUi-handle {
+    background-color: #838383;
+    cursor: pointer;
+}
+@media (max-width: 991px) {
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: 14px;
+        gap: 6px;
+    }
+
+    /* Cacher toutes les pages */
+    .pagination .page-item {
+        display: none;
+    }
+
+    /* Afficher PREVIOUS */
+    .pagination .page-item:first-child {
+        display: inline-block;
+    }
+
+    /* Afficher NEXT */
+    .pagination .page-item:last-child {
+        display: inline-block;
+    }
+
+    /* Afficher la page active */
+    .pagination .page-item.active {
+        display: inline-block;
+    }
+
+    /* Un peu plus large pour le doigt */
+    .pagination .page-link {
+        padding: 6px 10px;
+    }
+}
+.offcanvas {
+    z-index: 1055 !important;
+}
+
+.offcanvas-backdrop {
+    z-index: 1050 !important;
+}

@@ -1,0 +1,21 @@
+
+[
+{"id":"1","status":"1","ishome":"1","userid":"1","randcode":"218759944","brandname":"CQMONG","brandurl":"CQMONG","photourl":"CQMONG.png","cat_order":"1","date":"1655073098"},
+{"id":"2","status":"1","ishome":"1","userid":"1","randcode":"277614562","brandname":"K-SECRET","brandurl":"K-Secret","photourl":"K-Secret.png","cat_order":"2","date":"1655073166"},
+{"id":"3","status":"1","ishome":"1","userid":"1","randcode":"926429024","brandname":"SOME BY MI\r\n","brandurl":"SomeByMi","photourl":"Somebymi.png","cat_order":"6","date":"1655073180"},
+{"id":"4","status":"1","ishome":"1","userid":"1","randcode":"352424446","brandname":"ETUDE","brandurl":"Etude","photourl":"etude.png","cat_order":"3","date":"1655073195"},
+{"id":"5","status":"1","ishome":"1","userid":"1","randcode":"784971505","brandname":"innisfree","brandurl":"Innisfree","photourl":"Innisfree.png","cat_order":"4","date":"1655073207"},
+{"id":"6","status":"1","ishome":"1","userid":"1","randcode":"484159784","brandname":"COSRX","brandurl":"Cosrx","photourl":"Cosrx.png","cat_order":"5","date":"1655073220"},
+{"id":"7","status":"2","ishome":"1","userid":"1","randcode":"458265610","brandname":"Tony Moly","brandurl":"TonyMoly","photourl":"Tonymoly.png","cat_order":"17","date":"1655073236"},
+{"id":"8","status":"2","ishome":"1","userid":"1","randcode":"890022179","brandname":"Dr Jart +","brandurl":"DrJart","photourl":"Drjart.png","cat_order":"15","date":"1655073259"},
+{"id":"9","status":"2","ishome":"1","userid":"1","randcode":"150879105","brandname":"Huda Beauty","brandurl":"HudaBeauty","photourl":"Hudabeauty.png","cat_order":"13","date":"1655073270"},
+{"id":"10","status":"2","ishome":"1","userid":"1","randcode":"873820293","brandname":"Victoria’s Secret","brandurl":"Victoria-s-Secret","photourl":"VictoriasSecret.png","cat_order":"12","date":"1655073294"},
+{"id":"11","status":"2","ishome":"1","userid":"1","randcode":"973711230","brandname":"Bath & body works","brandurl":"Bath-and-body-works","photourl":"Bathandbodyworks.png","cat_order":"11","date":"1655073323"},
+{"id":"12","status":"2","ishome":"1","userid":"1","randcode":"14589807","brandname":"The Body Shop","brandurl":"TheBodyShop","photourl":"TheBodyShop.png","cat_order":"18","date":"1655073347"},
+{"id":"13","status":"2","ishome":"1","userid":"1","randcode":"976676899","brandname":"Olehenriksen","brandurl":"Olehenriksen","photourl":"Olehenriksen.png","cat_order":"16","date":"1655073357"},
+{"id":"14","status":"2","ishome":"2","userid":"1","randcode":"192635151","brandname":"Benefit","brandurl":"Benefit","photourl":"benefit.png","cat_order":"14","date":"1655073369"},
+{"id":"15","status":"1","ishome":"0","userid":"1","randcode":"22929190","brandname":"Make Up & Tools","brandurl":"makeupandtools","photourl":"","cat_order":"10","date":"1333333"},
+{"id":"16","status":"1","ishome":"1","userid":"1","randcode":"855520d2a5b0b1a64b939e7e30889e2a","brandname":"SKIN 1004","brandurl":"SKINBrand","photourl":"skin1004.png","cat_order":"8","date":"1655073369"},
+{"id":"17","status":"1","ishome":"1","userid":"1","randcode":"255520d2a310b1a64b939e7e30889e2C","brandname":"Beauty of Joseon","brandurl":"BeautyofJoseon","photourl":"BeautyofJoseon.png","cat_order":"7","date":"1655073369"},
+{"id":"18","status":"1","ishome":"1","userid":"1","randcode":"332520d2a310b1a64b939e7e30889e2C","brandname":"ANUA","brandurl":"Anua","photourl":"anua.png","cat_order":"9","date":"1655073369"}
+]

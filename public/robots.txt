@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Bloquer zones techniques
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /cart
+Disallow: /checkout
+
+# Sitemap
+Sitemap: https://korean-glam.tn/sitemap.xml
