@@ -28,6 +28,7 @@ use App\Http\Controllers\GammeController;
 
 
 Route::get('/init-app', [InitController::class, 'init'])->name('init');
+Route::post('/stripe/webhook', [PayementController::class, 'stripeWebhook'])->name('stripe.webhook');
 
 
 Route::middleware(['check.country.cookie'])->group(function () {

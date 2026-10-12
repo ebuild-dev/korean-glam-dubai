@@ -203,8 +203,13 @@ class PayementController extends Controller
     }
 
 
-    public function commander_payment(Request $request, KonnectService $KonnectService)
+    public function commander_payment(Request $request, StripeService $stripe)
     {
+        if ((int) $request->input('points_utilises', 0) > 0) {
+            return redirect()->route('checkout')->withErrors([
+                'payment' => 'Stripe payment cannot be combined with loyalty points. Choose cash on delivery or checkout without points.',
+            ]);
+        }
         //validation input
         $this->validate($request, [
             'adresse' => 'required|string',
@@ -280,47 +285,18 @@ class PayementController extends Controller
                 }
             }
             $token = $commande->trackcode; // ou un token unique
-            $response = $KonnectService->PayementProcess($commande->id, $token);
-
-            $body = json_decode($response->getBody(), true);
-
-            if (isset($body['payUrl'])) {
-                // Redirection vers la page de paiement Konnect
-                $request->attributes->set('checkout_completed', true);
-                return redirect($body['payUrl']);
-            }
-            // 🔹 Paiement avec points
-            $points_utilises = $request->input('points_utilises', 0);
-            if ($points_utilises > 0 && $user) {
-                $total_points_achat = $points_utilises;
-                // $total_points_vente = floor($commande->montant() / 10); // ex: 1 point pour 10DT d’achat
-
-                if ($user->points >= $total_points_achat) {
-                    // Déduire et ajouter les points
-                    $user->points -= $total_points_achat;
-                    $user->save();
-                    $commande->is_point = true;
-
-                    // Marquer la commande comme "payée par points"
-                    // $commande->mode_paiement = 'points';
-                    // $commande->montant_paye = 0;
-                    $commande->save();
-                } else {
-                    return redirect()
-                        ->route('error-page')
-                        ->with('error', "Vous n’avez pas assez de points pour effectuer cet achat !");
+            try {
+                $stripeSession = $stripe->PayementProcess($commande->id, $token);
+                if (!$stripeSession->url) {
+                    throw new \RuntimeException('Stripe checkout URL is missing.');
                 }
+            } catch (Throwable $e) {
+                Log::error('Stripe checkout could not be created.', ['order_id' => $commande->id, 'error' => $e->getMessage()]);
+                return redirect()->route('checkout')->withErrors(['payment' => 'Online payment is temporarily unavailable. Please try again.']);
             }
-            /*$user->points += $total_points_vente;
-            $user->save();*/
-            $this->make_notification($commande);
-
-            //supprimer le panier
-            session()->forget('panier_front');
-
+            session(['stripe_checkout_token' => $request->input('checkout_token')]);
             $request->attributes->set('checkout_completed', true);
-            session()->forget(['checkout_token', 'checkout_basket']);
-            return redirect()->route('after_commande')->with('success', "Your order has been paid!");
+            return redirect()->away($stripeSession->url);
         } else {
             return redirect()
                 ->route('error-page')
@@ -335,7 +311,7 @@ class PayementController extends Controller
         //generer la notification
         $notif = new notifications();
         $notif->type = "commande";
-        $notif->titre =  $this->user->nom;
+        $notif->titre = $commande->nom;
         $notif->url = "/admin/commande/" . $commande->id;
         $notif->message = "Nouvelle commande";
         $notif->save();
@@ -362,14 +338,28 @@ class PayementController extends Controller
 
 
 
-    public function payment_success($token)
+    public function payment_success(Request $request, $token, StripeService $stripe)
     {
         // retrouver la commande
-        $commande = commandes::where('trackcode', $token)->first();
-
-        if ($commande) {
-            $commande->status = 'payé';
-            $commande->save();
+        $commande = commandes::where('trackcode', $token)->firstOrFail();
+        if (!$request->query('session_id') || $commande->paymentRef !== $request->query('session_id')) {
+            return redirect()->route('payment-failure');
+        }
+        try {
+            $stripeSession = $stripe->retrieve($commande->paymentRef);
+            if ($stripe->confirm($stripeSession)) {
+                $this->make_notification($commande);
+            }
+        } catch (Throwable $e) {
+            Log::error('Stripe payment verification failed.', ['order_id' => $commande->id]);
+            return redirect()->route('payment-failure');
+        }
+        $commande->refresh();
+        if (!$commande->stripe_paid_at) {
+            return redirect()->route('payment-failure');
+        }
+        if (session('stripe_checkout_token') && session('stripe_checkout_token') === session('checkout_token')) {
+            session()->forget(['panier_front', 'coupon', 'valeurCoupon', 'total_prix', 'total_points_achat', 'checkout_token', 'checkout_basket', 'stripe_checkout_token']);
         }
 
         return view('front.payment-success', [
@@ -386,6 +376,24 @@ class PayementController extends Controller
             'payment_ref' => $paymentRef,
             'message' => "❌ Your payment failed. Please try again."
         ]);
+    }
+
+    public function stripeWebhook(Request $request, StripeService $stripe)
+    {
+        $secret = config('services.stripe.webhook_secret');
+        abort_unless($secret, 503);
+        try {
+            $event = \Stripe\Webhook::constructEvent($request->getContent(), $request->header('Stripe-Signature', ''), $secret);
+        } catch (\UnexpectedValueException | \Stripe\Exception\SignatureVerificationException $e) {
+            return response('Invalid signature', 400);
+        }
+        if (in_array($event->type, ['checkout.session.completed', 'checkout.session.async_payment_succeeded'], true)) {
+            $stripeSession = $event->data->object;
+            if ($stripe->confirm($stripeSession)) {
+                $this->make_notification(commandes::where('paymentRef', $stripeSession->id)->firstOrFail());
+            }
+        }
+        return response('OK');
     }
 
 }

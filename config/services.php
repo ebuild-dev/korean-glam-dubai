@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
     'lightspeed' => [
         'base_url' => env('LS_BASE_URL', 'https://espace.lightspeed.tn/Api/index.php/API'),
         'login' => env('LS_LOGIN'),

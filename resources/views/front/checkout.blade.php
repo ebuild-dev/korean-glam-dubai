@@ -93,6 +93,9 @@
                 }
             @endphp
             <form id="checkoutForm" method="post" action="{{ route('commander') }}">
+                @error('payment')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 @csrf
                 <input type="hidden" name="checkout_token" value="{{ session('checkout_token') }}">
                 @error('checkout_token')
@@ -193,7 +196,7 @@
                                 <button type="submit" formaction="{{ route('commander_payment') }}"
                                         class="btn btn-primary-color w-100 py-3 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-2">
                                     <i class="fa-solid fa-credit-card fa-lg text-white"></i>
-                                    <span>Payer en ligne</span>
+                                    <span>Pay online</span>
                                 </button>
                             </div>
 
